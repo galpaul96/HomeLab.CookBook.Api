@@ -2,10 +2,10 @@ name: Docker-Release
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ 'develop' ]
     tags: [ 'v*.*.*' ]
   pull_request:
-    branches: [ develop ]
+    branches: [ 'develop' ]
 
 env:
   # Use docker.io for Docker Hub if empty
@@ -42,10 +42,10 @@ jobs:
         with:
           string: ${{env.IMAGE_NAME}}
     
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
-          registry: ghcr.io
+          registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
          
