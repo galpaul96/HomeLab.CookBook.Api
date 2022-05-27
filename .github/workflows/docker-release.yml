@@ -63,4 +63,4 @@ jobs:
           tags: ${{ steps.imagename.outputs.lowercase }}:latest, ${{ steps.imagename.outputs.lowercase }}:${{ steps.version-bump.outputs.new_tag }}
           labels: ${{ steps.meta.outputs.labels }}
           
-   
+
