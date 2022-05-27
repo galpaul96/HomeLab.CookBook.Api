@@ -49,12 +49,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
          
-      
-        
       - name: Build and push Docker image
-        uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: ./HomeLab.CookBook/
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags: ${{ steps.imagename.outputs.lowercase }}:latest, ${{ steps.imagename.outputs.lowercase }}:${{ steps.version-bump.outputs.new_tag }}
+          labels: ${{ steps.meta.outputs.labels }}
+
  
