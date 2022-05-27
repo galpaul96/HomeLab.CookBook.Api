@@ -57,7 +57,7 @@ jobs:
       - name: downcase IMAGE_NAME
         run: |
           echo "IMAGE_NAME=${env.IMAGE_NAME,,}" >>${GITHUB_ENV}
-      - name: use REPO
+      - name: use IMAGE_NAME
         run: echo "The value of IMAGE_NAME is: ${IMAGE_NAME}"
         
       - name: Build and push Docker image
