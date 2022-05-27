@@ -54,12 +54,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
          
-      - id: downcase IMAGENAME
+      - name: downcase
         uses: ASzc/change-string-case-action@v2
         with:
           string: ${{env.IMAGE_NAME}}
-      - id: step2
-        run: echo ${{ steps.string.outputs.lowercase }}  
         
       - name: Build and push Docker image
         if: steps.changed-files-specific.outputs.all_changed_files != ''
