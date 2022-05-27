@@ -24,30 +24,19 @@ jobs:
           ref: ${{ github.ref }}
           fetch-depth: 0
 
-      - name: Get specific changed files
-        id: changed-files-specific
-        uses: tj-actions/changed-files@v17.3
-        with:
-          files: |
-            docker
-      - name: Automated Version Bump
-        if: steps.changed-files-specific.outputs.all_changed_files != ''
-        id: version-bump
-        uses: 'phips28/gh-action-bump-version@master'
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.36.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          skip-tag:  'true'
-          commit-message: 'CI: Bump Image version to {{version}}'
+          WITH_V: true
+          DEFAULT_BUMP: patch
 
       - name: Output Step
-        if: steps.changed-files-specific.outputs.all_changed_files != ''
         env:
           NEW_TAG: ${{ steps.version-bump.outputs.newTag }}
         run: echo "new tag $NEW_TAG"
 
       - name: Log into registry ${{ env.REGISTRY }}
-        if: steps.changed-files-specific.outputs.all_changed_files != ''
         uses: docker/login-action@28218f9b04b4f3f62068d7b6ce6ca5b26e35336c
         with:
           registry: ${{ env.REGISTRY }}
@@ -60,7 +49,6 @@ jobs:
           string: ${{env.IMAGE_NAME}}
         
       - name: Build and push Docker image
-        if: steps.changed-files-specific.outputs.all_changed_files != ''
         uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
         with:
           context: ./HomeLab.CookBook/
