@@ -57,9 +57,9 @@ jobs:
       - id: downcase
         uses: ASzc/change-string-case-action@v2
         with:
-          IMAGE_NAME: ${{env.IMAGE_NAME}}
+          string: ${{env.IMAGE_NAME}}
       - id: step2
-        run: echo ${{ steps.IMAGE_NAME.outputs.lowercase }}
+        run: IMAGE_NAME=${{ steps.string.outputs.lowercase }}
         
       - name: Build and push Docker image
         if: steps.changed-files-specific.outputs.all_changed_files != ''
@@ -67,5 +67,5 @@ jobs:
         with:
           context: ./HomeLab.CookBook/
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.IMAGE_NAME.outputs.lowercase }}:latest, ${{ steps.IMAGE_NAME.outputs.lowercase }}:${{ steps.version-bump.outputs.newTag }}
+          tags: ${IMAGE_NAME}:latest, ${IMAGE_NAME}:${{ steps.version-bump.outputs.newTag }}
  
