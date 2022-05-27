@@ -53,12 +53,18 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
+          
+      - name: downcase IMAGE_NAME
+        run: |
+          echo "IMAGE_NAME=${env.IMAGE_NAME,,}" >>${GITHUB_ENV}
+      - name: use REPO
+        run: echo "The value of IMAGE_NAME is: ${IMAGE_NAME}"
+        
       - name: Build and push Docker image
         if: steps.changed-files-specific.outputs.all_changed_files != ''
         uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
         with:
           context: ./HomeLab.CookBook/
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.IMAGE_NAME.toLowerCase() }}:latest, ${{ env.IMAGE_NAME.toLowerCase() }}:${{ steps.version-bump.outputs.newTag }}
+          tags: ${REPO}:latest, ${REPO}:${{ steps.version-bump.outputs.newTag }}
  
