@@ -51,8 +51,9 @@ jobs:
 
       - name: Build and push Docker image
         if: steps.changed-files-specific.outputs.all_changed_files != ''
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
         with:
           context: ./HomeLab.CookBook/
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ env.IMAGE_NAME }}:latest, ${{ env.IMAGE_NAME }}:${{ steps.version-bump.outputs.newTag }}
+ 
