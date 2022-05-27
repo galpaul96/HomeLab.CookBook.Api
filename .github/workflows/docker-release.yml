@@ -54,7 +54,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
          
-      - id: downcase IMAGE_NAME
+      - id: downcase IMAGENAME
         uses: ASzc/change-string-case-action@v2
         with:
           string: ${{env.IMAGE_NAME}}
