@@ -54,5 +54,5 @@ jobs:
         with:
           context: ./HomeLab.CookBook/
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.imagename.outputs.lowercase }}:latest, ${{ steps.imagename.outputs.lowercase }}:${{ steps.version-bump.outputs.newTag }}
+          tags: ${{ steps.imagename.outputs.lowercase }}:latest, ${{ steps.imagename.outputs.lowercase }}:${{ steps.version-bump.outputs.new_tag }}
  
