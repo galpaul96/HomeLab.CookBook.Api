@@ -3,9 +3,14 @@ name: Docker-Release
 on:
   push:
     branches: [ develop ]
+    tags: [ 'v*.*.*' ]
+  pull_request:
+    branches: [ develop ]
 
 env:
-  REGISTRY: docker.io
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+  # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
