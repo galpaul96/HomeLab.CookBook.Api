@@ -27,6 +27,11 @@ jobs:
           WITH_V: true
           DEFAULT_BUMP: patch
           RELEASE_BRANCHES: release
+          SOURCE: .
+          DRY_RUN: false
+          INITIAL_VERSION: 0.0.1
+          PRERELEASE_SUFFIX: prerelease
+          VERBOSE: true
 
       - name: Output Step
         env:
