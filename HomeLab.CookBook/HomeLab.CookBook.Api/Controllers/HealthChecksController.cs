@@ -45,7 +45,7 @@ namespace HomeLab.CookBook.Api.Controllers
         public IActionResult Test()
         {
 
-            return Ok("It works!!!");
+            return Ok("It works!");
         }
     }
 }
