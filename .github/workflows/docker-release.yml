@@ -1,7 +1,9 @@
 name: Docker-Release
 
 on:
-  pull_request:
+  pull_request_target:
+    types:
+      - closed
     branches:    
       - 'release'
 
@@ -14,7 +16,7 @@ env:
 jobs:
   release:
     runs-on: ubuntu-latest
-
+    if: github.event.pull_request.merged == true
     steps:
       - name: Checkout source code
         uses: 'actions/checkout@v2'
@@ -27,6 +29,11 @@ jobs:
           WITH_V: true
           DEFAULT_BUMP: patch
           RELEASE_BRANCHES: release
+          SOURCE: .
+          DRY_RUN: false
+          INITIAL_VERSION: 0.0.1
+          PRERELEASE_SUFFIX: prerelease
+          VERBOSE: true
 
       - name: Output Step
         env:
