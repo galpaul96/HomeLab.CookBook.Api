@@ -1,0 +1,69 @@
+name: Docker-Release
+
+on:
+  pull_request_target:
+    types:
+      - closed
+    branches:    
+      - 'release'
+
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: Checkout source code
+        uses: 'actions/checkout@v2'
+
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.36.0
+        id: version-bump
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          DEFAULT_BUMP: patch
+          RELEASE_BRANCHES: release
+          SOURCE: .
+          DRY_RUN: false
+          INITIAL_VERSION: 0.0.1
+          PRERELEASE_SUFFIX: prerelease
+          VERBOSE: true
+
+      - name: Output Step
+        env:
+          NEW_TAG: ${{ steps.version-bump.outputs.newTag }}
+        run: echo "new tag $NEW_TAG"
+        
+      - id: imagename
+        uses: ASzc/change-string-case-action@v2
+        with:
+          string: ${{env.IMAGE_NAME}}
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./HomeLab.CookBook/
+          push: true
+          tags: ghcr.io/${{ steps.imagename.outputs.lowercase }}:latest, ghcr.io/${{ steps.imagename.outputs.lowercase }}:${{ steps.version-bump.outputs.new_tag }}
+          labels: ${{ steps.meta.outputs.labels }}
+          secrets: |
+            "github_token=${{ secrets.GITHUB_TOKEN }}"
