@@ -14,30 +14,43 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  run-tests:
+  net-build:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
+    strategy:
+      matrix:
+        dotnet-version: [ '6.0.x' ]
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
+      - uses: actions/checkout@v3
+      - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Install dependencies
+        run: dotnet restore ./HomeLab.CookBook/
+      - name: Build
+        run: dotnet build --configuration Release --no-restore ./HomeLab.CookBook/
+        
+  net-test:
+    needs: net-build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: [ '6.0.x' ]
 
-    # Install the .NET Core workload
-    - name: Install .NET Core
-      uses: actions/setup-dotnet@v2
-      with:
-        dotnet-version: 6.x.x
-
-    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v1.0.2
-
-    # Execute all unit tests in the solution
-    - name: Execute unit tests
-      run: dotnet test
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Install dependencies
+        run: dotnet restore ./HomeLab.CookBook/
+      - name: Test
+        run: dotnet test --no-restore --verbosity normal ./HomeLab.CookBook/
   
   release:
+    needs: net-test
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
     steps:
