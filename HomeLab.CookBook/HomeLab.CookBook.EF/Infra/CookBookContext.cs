@@ -30,7 +30,9 @@ namespace HomeLab.CookBook.EF.Infra
         public CookBookContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<CookBookContext>();
-            string connectionString = "Server=192.168.1.104;Port=5432;Database=CookBook;Userid=postgre;Password=nar8thera;";
+            string connectionString = Environment.GetEnvironmentVariable("DbConnectionString")!;
+
+            //string connectionString = "Server=192.168.1.206;Port=5432;Database=CookBook.Dev;Userid=postgres;Password=TUPms4k@Homelab;";
             string applicationConnectionString = $"Application Name={ApplicationName};{connectionString}";
 
             optionsBuilder.UseNpgsql(applicationConnectionString, x =>

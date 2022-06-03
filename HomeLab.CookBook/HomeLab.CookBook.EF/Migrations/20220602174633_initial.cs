@@ -29,7 +29,7 @@ namespace HomeLab.CookBook.EF.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Instruction",
+                name: "Steps",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "uuid_generate_v4()"),
@@ -41,9 +41,9 @@ namespace HomeLab.CookBook.EF.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Instruction", x => x.Id);
+                    table.PrimaryKey("PK_Steps", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Instruction_Recipes_RecipeId",
+                        name: "FK_Steps_Recipes_RecipeId",
                         column: x => x.RecipeId,
                         principalTable: "Recipes",
                         principalColumn: "Id",
@@ -51,23 +51,23 @@ namespace HomeLab.CookBook.EF.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Steps",
+                name: "SubStep",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "uuid_generate_v4()"),
                     Description = table.Column<string>(type: "text", nullable: false),
                     Duration = table.Column<TimeSpan>(type: "interval", nullable: false),
-                    InstructionId = table.Column<Guid>(type: "uuid", nullable: false),
+                    StepId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Steps", x => x.Id);
+                    table.PrimaryKey("PK_SubStep", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Steps_Instruction_InstructionId",
-                        column: x => x.InstructionId,
-                        principalTable: "Instruction",
+                        name: "FK_SubStep_Steps_StepId",
+                        column: x => x.StepId,
+                        principalTable: "Steps",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -81,7 +81,7 @@ namespace HomeLab.CookBook.EF.Migrations
                     Details = table.Column<string>(type: "text", nullable: false),
                     Amount = table.Column<string>(type: "text", nullable: false),
                     AmountType = table.Column<string>(type: "text", nullable: false),
-                    StepId = table.Column<Guid>(type: "uuid", nullable: false),
+                    SubStepId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -89,9 +89,9 @@ namespace HomeLab.CookBook.EF.Migrations
                 {
                     table.PrimaryKey("PK_Ingredients", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Ingredients_Steps_StepId",
-                        column: x => x.StepId,
-                        principalTable: "Steps",
+                        name: "FK_Ingredients_SubStep_SubStepId",
+                        column: x => x.SubStepId,
+                        principalTable: "SubStep",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -103,20 +103,9 @@ namespace HomeLab.CookBook.EF.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ingredients_StepId",
+                name: "IX_Ingredients_SubStepId",
                 table: "Ingredients",
-                column: "StepId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Instruction_Id",
-                table: "Instruction",
-                column: "Id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Instruction_RecipeId",
-                table: "Instruction",
-                column: "RecipeId");
+                column: "SubStepId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Recipes_Id",
@@ -131,9 +120,20 @@ namespace HomeLab.CookBook.EF.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Steps_InstructionId",
+                name: "IX_Steps_RecipeId",
                 table: "Steps",
-                column: "InstructionId");
+                column: "RecipeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SubStep_Id",
+                table: "SubStep",
+                column: "Id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SubStep_StepId",
+                table: "SubStep",
+                column: "StepId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -142,10 +142,10 @@ namespace HomeLab.CookBook.EF.Migrations
                 name: "Ingredients");
 
             migrationBuilder.DropTable(
-                name: "Steps");
+                name: "SubStep");
 
             migrationBuilder.DropTable(
-                name: "Instruction");
+                name: "Steps");
 
             migrationBuilder.DropTable(
                 name: "Recipes");

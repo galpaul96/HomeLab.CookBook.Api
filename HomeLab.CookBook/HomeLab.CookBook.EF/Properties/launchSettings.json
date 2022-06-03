@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "HomeLab.CookBook.EF": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DbConnectionString": "Server=192.168.1.206;Port=5432;Database=CookBook.Dev;Userid=postgres;Password=TUPms4k@Homelab;"
+      }
+    }
+  }
+}

@@ -11,9 +11,9 @@ namespace HomeLab.CookBook.Domain.Entities
         public string Description { get; set; }
         public TimeSpan Duration { get; set; }
 
-        public Guid InstructionId { get; set; }
-        public Instruction Instruction { get; set; }
+        public Guid RecipeId { get; set; }
+        public Recipe Recipe { get; set; }
 
-        public ICollection<Ingredient> Ingredients { get; set; }
+        public ICollection<SubStep> SubSteps { get; set; }
     }
 }

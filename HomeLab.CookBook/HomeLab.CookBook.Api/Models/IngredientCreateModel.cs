@@ -5,7 +5,7 @@ namespace HomeLab.CookBook.API.Models
     public class IngredientCreateModel
     {
         [Required]
-        public Guid StepId { get; set; }
+        public Guid SubStepId { get; set; }
 
         [Required]
         [MinLength(3)]

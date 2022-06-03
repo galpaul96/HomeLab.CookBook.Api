@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace HomeLab.CookBook.EF.Configurations
 {
-    internal class InstructionEntityTypeConfiguration : IEntityTypeConfiguration<Instruction>
+    internal class SubStepEntityTypeConfiguration : IEntityTypeConfiguration<SubStep>
     {
-        public void Configure(EntityTypeBuilder<Instruction> builder)
+        public void Configure(EntityTypeBuilder<SubStep> builder)
         {
             builder.HasKey(x => x.Id);
 
@@ -23,9 +23,9 @@ namespace HomeLab.CookBook.EF.Configurations
             builder.Property(x => x.Duration).IsRequired();
             builder.Property(x => x.Description).IsRequired();
 
-            builder.HasMany(x => x.Steps)
-                .WithOne(x => x.Instruction)
-                .HasForeignKey(x => x.InstructionId);
+            builder.HasMany(x => x.Ingredients)
+                .WithOne(x => x.SubStep)
+                .HasForeignKey(x => x.SubStepId);
         }
     }
 }

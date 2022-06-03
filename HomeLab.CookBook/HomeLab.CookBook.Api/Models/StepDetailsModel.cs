@@ -8,6 +8,6 @@
         public TimeSpan Duration { get; set; }
 
         public RecipeOverviewModel Recipe { get; set; }
-        public ICollection<IngredientOverviewModel> Ingredients { get; set; }
+        public ICollection<SubStepOverviewModel> SubSteps { get; set; }
     }
 }

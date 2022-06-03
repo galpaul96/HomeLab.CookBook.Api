@@ -10,7 +10,7 @@ using System.Net.Mime;
 namespace HomeLab.CookBook.Api.Controllers
 {
     /// <summary>
-    /// Steps controller.
+    /// Steps controller
     /// </summary>
     [ApiController]
     [Route("[controller]")]
@@ -23,7 +23,7 @@ namespace HomeLab.CookBook.Api.Controllers
         private readonly IMapper _mapper;
 
         /// <summary>
-        /// Steps controller constructor
+        /// Steps controller constructor.
         /// </summary>
         /// <param name="logger">Logger component</param>
         /// <param name="service">Service</param>
@@ -36,22 +36,22 @@ namespace HomeLab.CookBook.Api.Controllers
         }
 
         /// <summary>
-        /// Request to create a Step of a Recipe
+        /// Request to create a step for a specific Recipe
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
         ///     POST /steps
         ///     {
-        ///         "description": "Spice it up.",
-        ///         "duration": "00:20:00",
-        ///         "recipeId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        ///         "title": "Preparation",
+        ///         "description": "Prepare the ingredients",
+        ///         "duration": 00:10:00
         ///     }
         ///
         /// </remarks>
         /// <param name="model">Step model</param>
-        /// <returns>Recipe Step overview</returns>
-        /// <response code="201">Recipe Step created.</response>
+        /// <returns>Step overview</returns>
+        /// <response code="201">Step created.</response>
         /// <response code="404">Recipe reference not found.</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(StepOverviewModel))]
@@ -59,16 +59,23 @@ namespace HomeLab.CookBook.Api.Controllers
         public async Task<IActionResult> Create(StepCreateModel model)
         {
             var step = _mapper.Map<StepModel>(model);
+            try
+            {
+                var result = await _service.AddAsync(step);
+                return Created(nameof(Create), _mapper.Map<StepOverviewModel>(result));
 
-            var result = await _service.AddAsync(step);
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
 
-            return Ok(_mapper.Map<StepOverviewModel>(result));
         }
 
         /// <summary>
-        /// Retrieves a list of Recipe steps.
+        /// Retrieves a list of steps for a recipe.
         /// </summary>
-        /// <returns>List of Recipe steps.</returns>
+        /// <returns>List of steps</returns>
         /// <response code="200">Steps list retrieved.</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StepOverviewModel[]))]
@@ -80,15 +87,16 @@ namespace HomeLab.CookBook.Api.Controllers
         }
 
         /// <summary>
-        /// Retrieve a recipe step from its reference ID
+        /// Retrieve a step from its ID
         /// </summary>
-        /// <param name="id">Guid reference of the recipe step</param>
-        /// <returns>Recipe step data</returns>
-        /// <response code="200">Recipe step structure retrieved.</response>
-        /// <response code="404">Recipe step not found.</response>
-        [HttpGet("{id:guid}")]
+        /// <param name="id">Guid reference of the step</param>
+        /// <returns>Step data</returns>
+        /// <response code="200">Step structure retrieved.</response>
+        /// <response code="404">Step not found.</response>
+        [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StepDetailsModel))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+
         public async Task<IActionResult> Get(Guid id)
         {
             var recipe = await _service.GetByIdAsync(id);
@@ -97,26 +105,26 @@ namespace HomeLab.CookBook.Api.Controllers
         }
 
         /// <summary>
-        /// Patch operation for the recipe step structure.
+        /// Patch operation for the step structure.
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
         ///     PATCH /steps/{id}
         ///     [{
-        ///         "path": "/duration",
+        ///         "path": "/title",
         ///         "op": "replace",
-        ///         "value": "00:20:00"
+        ///         "value": "Let it sit for 30 mins."
         ///     }]
         ///
         /// </remarks>
-        /// <param name="id">Recipe step reference Id.</param>
+        /// <param name="id">Step reference Id.</param>
         /// <param name="patch">Patch object</param>
-        /// <returns>Returns updated Recipe step.</returns>
-        /// <response code="200">Recipe step structure updated.</response>
-        /// <response code="404">Recipe step not found.</response>
+        /// <returns>Returns updated Step.</returns>
+        /// <response code="200">Step structure updated.</response>
+        /// <response code="404">Step not found.</response>
         /// <response code="400">Operation not permitted.</response>
-        [HttpPatch("{id:guid}")]
+        [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StepOverviewModel))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -124,8 +132,8 @@ namespace HomeLab.CookBook.Api.Controllers
         {
             var validOperations = new List<(string Operation, string Path)>()
             {
-                ("replace", "/description"),
-                ("replace", "/duration"),
+                ("replace", "/title"),
+                ("replace", "/description")
             };
 
             if (!patch.Operations.TrueForAll(x => validOperations.Contains((x.op, x.path))))
@@ -145,16 +153,17 @@ namespace HomeLab.CookBook.Api.Controllers
             {
                 return NotFound();
             }
+
         }
 
         /// <summary>
-        /// Deletes an recipe step using its reference.
+        /// Deletes a step using its reference.
         /// </summary>
-        /// <param name="id">Recipe step reference Id.</param>
+        /// <param name="id">Step reference Id.</param>
         /// <returns>HTTP OK</returns>
-        /// <response code="200">Recipe step was deleted.</response>
-        /// <response code="404">Recipe step not found.</response>
-        [HttpDelete("{id:guid}")]
+        /// <response code="200">Step was deleted.</response>
+        /// <response code="404">Step not found.</response>
+        [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(Guid id)
@@ -170,6 +179,7 @@ namespace HomeLab.CookBook.Api.Controllers
             }
 
             return Ok();
+
         }
 
     }

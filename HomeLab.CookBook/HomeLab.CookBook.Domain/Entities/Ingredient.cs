@@ -7,7 +7,7 @@
         public string Amount { get; set; }
         public string AmountType { get; set; }
 
-        public Guid StepId { get; set; }
-        public Step Step { get; set; }
+        public Guid SubStepId { get; set; }
+        public SubStep SubStep { get; set; }
     }
 }

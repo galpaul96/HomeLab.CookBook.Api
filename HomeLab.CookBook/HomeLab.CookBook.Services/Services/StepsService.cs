@@ -39,7 +39,7 @@ namespace HomeLab.CookBook.Services.Services
 
         public async Task<StepModel> GetByIdAsync(Guid id)
         {
-            var result = await _repository.GetByIdAsync<Step>(id, x => x.Instruction,x=>x.Ingredients);
+            var result = await _repository.GetByIdAsync<Step>(id, x => x.Recipe,x=>x.SubSteps);
 
             if (result == null)
             {
@@ -52,8 +52,8 @@ namespace HomeLab.CookBook.Services.Services
         public IQueryable<StepModel> Get()
         {
             var result = _repository.GetAllAsync<Step>();
-            result.Include(x => x.Instruction);
-            result.Include(x => x.Ingredients);
+            result.Include(x => x.Recipe);
+            result.Include(x => x.SubSteps);
 
             return result.ProjectTo<StepModel>(_mapper.ConfigurationProvider);
         }

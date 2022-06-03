@@ -34,7 +34,7 @@ namespace HomeLab.CookBook.Services.Services
         public async Task<RecipeModel> GetByIdAsync(Guid id)
         {
             var result = _repository.GetAllAsync<Recipe>();
-            result.Include(x => x.Instructions).ThenInclude(x => x.Steps).ThenInclude(x=>x.Ingredients);
+            result.Include(x => x.Steps).ThenInclude(x => x.SubSteps).ThenInclude(x=>x.Ingredients);
 
             var recipe = await result.ProjectTo<RecipeModel>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(x => x.Id == id);
@@ -50,7 +50,7 @@ namespace HomeLab.CookBook.Services.Services
         public IQueryable<RecipeModel> Get()
         {
             var result = _repository.GetAllAsync<Recipe>();
-            result.Include(x => x.Instructions).ThenInclude(x => x.Steps).ThenInclude(x=>x.Ingredients);
+            result.Include(x => x.Steps).ThenInclude(x => x.SubSteps).ThenInclude(x=>x.Ingredients);
 
             return result.ProjectTo<RecipeModel>(_mapper.ConfigurationProvider);
         }
