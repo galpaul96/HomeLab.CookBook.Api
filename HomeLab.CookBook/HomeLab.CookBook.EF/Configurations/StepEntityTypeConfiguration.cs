@@ -18,7 +18,7 @@ namespace HomeLab.CookBook.EF.Configurations
             builder.Property(x => x.Duration).IsRequired();
             builder.Property(x => x.Description).IsRequired();
             
-            builder.HasMany(x => x.Ingredients)
+            builder.HasMany(x => x.SubSteps)
                 .WithOne(x => x.Step)
                 .HasForeignKey(x => x.StepId);
         }

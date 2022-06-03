@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace HomeLab.CookBook.Domain.Entities
 {
-    public class Instruction : Audit
+    public class SubStep : Audit
     {
         public string Description { get; set; }
         public TimeSpan Duration { get; set; }
 
-        public Guid RecipeId { get; set; }
-        public Recipe Recipe { get; set; }
-        public ICollection<Step> Steps { get; set; }
+        public Guid StepId { get; set; }
+        public Step Step { get; set; }
+        public ICollection<Ingredient> Ingredients { get; set; }
 
     }
 }

@@ -14,6 +14,7 @@ namespace HomeLab.CookBook.Services
         {
             services.TryAddScoped<IRecipesService, RecipesService>();
             services.TryAddScoped<IStepsService, StepsService>();
+            services.TryAddScoped<ISubStepsService, SubStepsService>();
             services.TryAddScoped<IIngredientsService, IngredientsService>();
 
             services.ConfigureRepository(configuration);

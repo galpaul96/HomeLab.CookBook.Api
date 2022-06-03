@@ -2,7 +2,7 @@
 
 namespace HomeLab.CookBook.API.Models
 {
-    public class InstructionCreateModel
+    public class SubStepCreateModel
     {
         [Required]
         [MinLength(10)]
@@ -14,6 +14,6 @@ namespace HomeLab.CookBook.API.Models
         public string Duration { get; set; }
 
         [Required]
-        public Guid RecipeId { get; set; }
+        public Guid StepId { get; set; }
     }
 }

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HomeLab.CookBook.EF.Migrations
 {
     [DbContext(typeof(CookBookContext))]
-    [Migration("20220330101129_initial")]
+    [Migration("20220602174633_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,7 +51,7 @@ namespace HomeLab.CookBook.EF.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("StepId")
+                    b.Property<Guid>("SubStepId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
@@ -62,42 +62,9 @@ namespace HomeLab.CookBook.EF.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.HasIndex("StepId");
+                    b.HasIndex("SubStepId");
 
                     b.ToTable("Ingredients");
-                });
-
-            modelBuilder.Entity("HomeLab.CookBook.Domain.Entities.Instruction", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasDefaultValueSql("uuid_generate_v4()");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<TimeSpan>("Duration")
-                        .HasColumnType("interval");
-
-                    b.Property<Guid>("RecipeId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.HasIndex("RecipeId");
-
-                    b.ToTable("Instruction");
                 });
 
             modelBuilder.Entity("HomeLab.CookBook.Domain.Entities.Recipe", b =>
@@ -151,7 +118,7 @@ namespace HomeLab.CookBook.EF.Migrations
                     b.Property<TimeSpan>("Duration")
                         .HasColumnType("interval");
 
-                    b.Property<Guid>("InstructionId")
+                    b.Property<Guid>("RecipeId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
@@ -162,26 +129,59 @@ namespace HomeLab.CookBook.EF.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.HasIndex("InstructionId");
+                    b.HasIndex("RecipeId");
 
                     b.ToTable("Steps");
                 });
 
+            modelBuilder.Entity("HomeLab.CookBook.Domain.Entities.SubStep", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("uuid_generate_v4()");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<TimeSpan>("Duration")
+                        .HasColumnType("interval");
+
+                    b.Property<Guid>("StepId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("StepId");
+
+                    b.ToTable("SubStep");
+                });
+
             modelBuilder.Entity("HomeLab.CookBook.Domain.Entities.Ingredient", b =>
                 {
-                    b.HasOne("HomeLab.CookBook.Domain.Entities.Step", "Step")
+                    b.HasOne("HomeLab.CookBook.Domain.Entities.SubStep", "SubStep")
                         .WithMany("Ingredients")
-                        .HasForeignKey("StepId")
+                        .HasForeignKey("SubStepId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Step");
+                    b.Navigation("SubStep");
                 });
 
-            modelBuilder.Entity("HomeLab.CookBook.Domain.Entities.Instruction", b =>
+            modelBuilder.Entity("HomeLab.CookBook.Domain.Entities.Step", b =>
                 {
                     b.HasOne("HomeLab.CookBook.Domain.Entities.Recipe", "Recipe")
-                        .WithMany("Instructions")
+                        .WithMany("Steps")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -189,28 +189,28 @@ namespace HomeLab.CookBook.EF.Migrations
                     b.Navigation("Recipe");
                 });
 
-            modelBuilder.Entity("HomeLab.CookBook.Domain.Entities.Step", b =>
+            modelBuilder.Entity("HomeLab.CookBook.Domain.Entities.SubStep", b =>
                 {
-                    b.HasOne("HomeLab.CookBook.Domain.Entities.Instruction", "Instruction")
-                        .WithMany("Steps")
-                        .HasForeignKey("InstructionId")
+                    b.HasOne("HomeLab.CookBook.Domain.Entities.Step", "Step")
+                        .WithMany("SubSteps")
+                        .HasForeignKey("StepId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Instruction");
-                });
-
-            modelBuilder.Entity("HomeLab.CookBook.Domain.Entities.Instruction", b =>
-                {
-                    b.Navigation("Steps");
+                    b.Navigation("Step");
                 });
 
             modelBuilder.Entity("HomeLab.CookBook.Domain.Entities.Recipe", b =>
                 {
-                    b.Navigation("Instructions");
+                    b.Navigation("Steps");
                 });
 
             modelBuilder.Entity("HomeLab.CookBook.Domain.Entities.Step", b =>
+                {
+                    b.Navigation("SubSteps");
+                });
+
+            modelBuilder.Entity("HomeLab.CookBook.Domain.Entities.SubStep", b =>
                 {
                     b.Navigation("Ingredients");
                 });

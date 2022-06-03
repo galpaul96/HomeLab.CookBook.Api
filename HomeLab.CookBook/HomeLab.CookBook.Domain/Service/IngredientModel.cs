@@ -8,7 +8,7 @@
         public string Amount { get; set; }
         public string AmountType { get; set; }
 
-        public Guid StepId { get; set; }
-        public StepModel Step { get; set; }
+        public Guid SubStepId { get; set; }
+        public SubStepModel SubStep { get; set; }
     }
 }

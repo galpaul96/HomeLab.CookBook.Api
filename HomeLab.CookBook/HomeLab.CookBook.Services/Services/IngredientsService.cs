@@ -28,7 +28,7 @@ namespace HomeLab.CookBook.Services.Services
 
         public async Task<IngredientModel> AddAsync(IngredientModel model)
         {
-            if (!await _repository.ExistsAsync<Step>(model.StepId))
+            if (!await _repository.ExistsAsync<SubStep>(model.SubStepId))
             {
                 throw new NotFoundException();
             }
@@ -39,7 +39,7 @@ namespace HomeLab.CookBook.Services.Services
 
         public async Task<IngredientModel> GetByIdAsync(Guid id)
         {
-            var result = await _repository.GetByIdAsync<Ingredient>(id, x => x.Step);
+            var result = await _repository.GetByIdAsync<Ingredient>(id, x => x.SubStep);
 
             if (result == null)
             {
@@ -52,7 +52,7 @@ namespace HomeLab.CookBook.Services.Services
         public IQueryable<IngredientModel> Get()
         {
             var result = _repository.GetAllAsync<Ingredient>();
-            result.Include(x => x.Step);
+            result.Include(x => x.SubStep);
 
             return result.ProjectTo<IngredientModel>(_mapper.ConfigurationProvider);
         }

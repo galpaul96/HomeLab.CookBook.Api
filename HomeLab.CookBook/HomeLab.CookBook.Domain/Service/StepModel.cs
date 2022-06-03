@@ -10,6 +10,6 @@
         public Guid RecipeId { get; set; }
         public RecipeModel Recipe { get; set; }
 
-        public ICollection<IngredientModel> Ingredients { get; set; }
+        public ICollection<SubStepModel> SubSteps { get; set; }
     }
 }

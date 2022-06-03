@@ -2,7 +2,7 @@
 
 namespace HomeLab.CookBook.API.Models
 {
-    public class InstructionOverviewModel
+    public class SubStepOverviewModel
     {
         public Guid Id { get; set; }
 

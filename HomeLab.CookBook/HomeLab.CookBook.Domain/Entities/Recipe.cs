@@ -6,6 +6,6 @@
         public string Description { get; set; }
         public string Difficulty { get; set; }
 
-        public ICollection<Instruction> Instructions { get; set; }
+        public ICollection<Step> Steps { get; set; }
     }
 }

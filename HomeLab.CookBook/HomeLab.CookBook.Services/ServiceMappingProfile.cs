@@ -14,6 +14,9 @@ namespace HomeLab.CookBook.Services
             CreateMap<StepModel, Step>();
             CreateMap<Step, StepModel>();
 
+            CreateMap<SubStepModel, SubStep>();
+            CreateMap<SubStep, SubStepModel>();
+
             CreateMap<IngredientModel, Ingredient>();
             CreateMap<Ingredient, IngredientModel>();
         }

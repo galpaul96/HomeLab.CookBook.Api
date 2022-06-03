@@ -8,6 +8,6 @@
         public string Amount { get; set; }
         public string AmountType { get; set; }
 
-        public StepOverviewModel Step { get; set; }
+        public SubStepOverviewModel SubStep { get; set; }
     }
 }
