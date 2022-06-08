@@ -20,9 +20,11 @@ namespace HomeLab.CookBook.EF
 
             services.AddDbContext<CookBookContext>(
                 options =>
-                    options.UseNpgsql(
-                        connectionString,
-                        x => x.MigrationsAssembly("HomeLab.CookBook.EF")));
+                options.UseInMemoryDatabase("CookBook")
+                    //options.UseNpgsql(
+                    //    connectionString,
+                     //   x => x.MigrationsAssembly("HomeLab.CookBook.EF"))
+                    );
             
         }
     }
